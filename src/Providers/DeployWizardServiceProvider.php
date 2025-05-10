@@ -16,9 +16,12 @@ class DeployWizardServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
         $this->loadViewsFrom(__DIR__ . '/../Views', 'deployWizard');
         $this->publishes([
-            __DIR__ . '/../Config/deployWizard.php' => config_path('deployWizard.php'),
-            __DIR__ . '/../Public' => public_path('vendor/deploy-wizard')
-        ], 'deploy-wizard');
+            __DIR__ . '/../Config/deploywizard.php' => config_path('deploywizard.php'),
+        ], 'deploy-wizard-config');
+
+        $this->publishes([
+            __DIR__ . '/../Views' => resource_path('views/vendor/deploy-wizard'),
+        ], 'deploy-wizard-views');
 
         $router->aliasMiddleware('check.installation', CheckInstallation::class);
 
@@ -50,6 +53,6 @@ class DeployWizardServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../Config/deployWizard.php', 'deployWizard');
+        $this->mergeConfigFrom(__DIR__ . '/../Config/deploywizard.php', 'deploywizard');
     }
 }
