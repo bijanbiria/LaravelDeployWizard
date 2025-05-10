@@ -3,7 +3,7 @@
     "description": "A Laravel Installer Wizard similar to WordPress installation process",
     "type": "library",
     "require": {
-        "laravel/framework": "^10.0"
+        "laravel/framework": ">=10.0 <13.0"
     },
     "license": "MIT",
     "autoload": {
