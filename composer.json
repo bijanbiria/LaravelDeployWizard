@@ -21,7 +21,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Bijanbiria\\LaravelDeployWizard\\Providers\\InstallServiceProvider"
+                "Bijanbiria\\LaravelDeployWizard\\Providers\\DeployWizardServiceProvider"
             ]
         }
     }

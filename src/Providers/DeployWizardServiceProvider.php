@@ -4,7 +4,7 @@ namespace Bijanbiria\LaravelDeployWizard\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class DeployWizardProvider extends ServiceProvider
+class DeployWizardServiceProvider extends ServiceProvider
 {
     public function boot()
     {
