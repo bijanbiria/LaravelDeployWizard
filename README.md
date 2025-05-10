@@ -139,3 +139,7 @@ Feel free to submit issues and pull requests. We are open to new ideas!
 ## 👤 **Author**
 
 * **Bijan Biria** - [bijanbiria@gmail.com](mailto:bijanbiria@gmail.com)
+
+## 📰 **Article Link**
+
+* **bijanbiria.com** - [Laravel Deploy Wizard – Revolutionizing Laravel Installation](https://bijanbiria.com/laravel/laravel-deploy-wizard/)
