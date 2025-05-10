@@ -10,7 +10,7 @@
             <p style="color: red;">{{ session('error') }}</p>
         @endif
 
-        <form method="POST" action="{{ url(config('installer.route', 'install')) }}">
+        <form method="POST" action="{{ url(config('deployWizard.route', 'install')) }}">
             @csrf
             <label>Database Host:</label>
             <input type="text" name="db_host" required>

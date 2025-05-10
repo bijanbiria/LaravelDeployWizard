@@ -8,16 +8,16 @@ class DeployWizardServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        // Load Routes
         $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
-
-        // Load Views
         $this->loadViewsFrom(__DIR__ . '/../Views', 'deployWizard');
 
-        // Publish Config
         $this->publishes([
             __DIR__ . '/../Config/deployWizard.php' => config_path('deployWizard.php'),
         ], 'config');
+
+        if (!file_exists(config_path('deployWizard.php'))) {
+            $this->mergeConfigFrom(__DIR__ . '/../Config/deployWizard.php', 'deployWizard');
+        }
     }
 
     public function register()

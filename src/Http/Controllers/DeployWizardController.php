@@ -26,16 +26,12 @@ class DeployWizardController extends Controller
 
         $envPath = base_path('.env');
 
-        $content = "
-            DB_CONNECTION=mysql
-            DB_HOST={$request->db_host}
-            DB_PORT={$request->db_port}
-            DB_DATABASE={$request->db_database}
-            DB_USERNAME={$request->db_username}
-            DB_PASSWORD={$request->db_password}
-        ";
-
-        file_put_contents($envPath, $content);
+        file_put_contents($envPath, PHP_EOL . "DB_CONNECTION=mysql" . PHP_EOL, FILE_APPEND);
+        file_put_contents($envPath, "DB_HOST={$request->db_host}" . PHP_EOL, FILE_APPEND);
+        file_put_contents($envPath, "DB_PORT={$request->db_port}" . PHP_EOL, FILE_APPEND);
+        file_put_contents($envPath, "DB_DATABASE={$request->db_database}" . PHP_EOL, FILE_APPEND);
+        file_put_contents($envPath, "DB_USERNAME={$request->db_username}" . PHP_EOL, FILE_APPEND);
+        file_put_contents($envPath, "DB_PASSWORD={$request->db_password}" . PHP_EOL, FILE_APPEND);
 
         try {
             DB::connection()->getPdo();

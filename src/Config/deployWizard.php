@@ -1,8 +1,5 @@
 <?php
 
-namespace Bijanbiria\LaravelDeployWizard\Config;
-
-class deployWizard
-{
-
-}
+return [
+    'route' => 'deploy-wizard',
+];
