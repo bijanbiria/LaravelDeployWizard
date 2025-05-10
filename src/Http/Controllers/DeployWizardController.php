@@ -2,16 +2,23 @@
 
 namespace Bijanbiria\LaravelDeployWizard\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 
 class DeployWizardController extends Controller
 {
-    public function show(Request $request)
+    /**
+     * Display the deployment wizard view with default configuration values.
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
+    public function show(Request $request): View
     {
+        // Render the view and pass current configuration values to the form
         return view('deployWizard::deploy-wizard', [
             'step'              => $request->input('step') ?? 1,
             'appName'           => config('app.name'),
@@ -29,14 +36,19 @@ class DeployWizardController extends Controller
         ]);
     }
 
-    public function storeStep1(Request $request)
+    /**
+     * Handle the submission of Step 1 form, setting application name and URL.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function storeStep1(Request $request): RedirectResponse
     {
+        // Validate required fields for Step 1
         $request->validate([
             'app_name' => 'required',
             'app_url'  => 'required',
         ]);
-
-        $envPath = base_path('.env');
 
         // Step 1: Set Base Variables
         $this->setEnvValue('APP_NAME', $request->app_name);
@@ -44,38 +56,52 @@ class DeployWizardController extends Controller
         $this->setEnvValue('APP_ENV', 'production');
         $this->setEnvValue('APP_DEBUG', 'true');
 
+        // Redirect to the next step (Step 2)
         return redirect()->route('deploy-wizard.show', ['step' => '2']);
     }
 
-    public function storeStep2(Request $request)
+    /**
+     * Handle the submission of Step 2 form, setting locale and faker configuration.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function storeStep2(Request $request): RedirectResponse
     {
+        // Validate required fields for Step 2
         $request->validate([
             'app_locale'          => 'required',
             'app_fallback_locale' => 'required',
             'app_faker_locale'    => 'required',
         ]);
 
-        $envPath = base_path('.env');
-
         // Step 2: Set Locale Variables
         $this->setEnvValue('APP_LOCALE', $request->app_locale);
         $this->setEnvValue('APP_FALLBACK_LOCALE', $request->app_fallback_locale);
         $this->setEnvValue('APP_FAKER_LOCALE', $request->app_faker_locale);
 
+        // Redirect to the next step (Step 3)
         return redirect()->route('deploy-wizard.show', ['step' => '3']);
     }
 
-    public function storeStep3(Request $request)
+    /**
+     * Handle the submission of Step 3 form, setting database configurations
+     * and executing final Artisan commands.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function storeStep3(Request $request): RedirectResponse
     {
+        // Validate required fields for Step 3
         $request->validate([
             'db_connection' => 'required',
         ]);
 
-        $envPath = base_path('.env');
-
-        // Step 3: Set database Variables
+        // Step 3: Set Database Variables
         $this->setEnvValue('DB_CONNECTION', $request->db_connection);
 
+        // If the database is not SQLite, set additional configurations
         if ($request->db_connection !== 'sqlite') {
             $this->setEnvValue('DB_HOST', $request->db_host);
             $this->setEnvValue('DB_PORT', $request->db_port);
@@ -84,6 +110,7 @@ class DeployWizardController extends Controller
             $this->setEnvValue('DB_PASSWORD', $request->db_password);
         }
 
+        // ✅ Execute final Artisan commands defined in the configuration
         $commands = config('deploywizard.final_commands');
 
         foreach ($commands as $command) {
@@ -95,24 +122,36 @@ class DeployWizardController extends Controller
             }
         }
 
-        return redirect()->route('/');
+        // Redirect to the complete route defined in the configuration
+        return redirect()->to(config('deploywizard.complete_route', '/'));
     }
 
-    public function setEnvValue(string $key, string $value)
+    /**
+     * Update or add a key-value pair in the .env file.
+     *
+     * @param string $key
+     * @param string $value
+     * @return void
+     */
+    public function setEnvValue(string $key, string $value): void
     {
         $envPath = base_path('.env');
 
         if (file_exists($envPath)) {
             $envContent = file_get_contents($envPath);
 
+            // Regex pattern to find the key, even if it's commented (#)
             $pattern = "/^#?\s*{$key}=.*/m";
 
             if (preg_match($pattern, $envContent)) {
+                // ✅ If the key exists (even as a comment), replace its value
                 $envContent = preg_replace($pattern, "{$key}={$value}", $envContent);
             } else {
+                // ✅ If the key doesn't exist, append it to the end of the file
                 $envContent .= PHP_EOL . "{$key}={$value}";
             }
 
+            // ✅ Write the new content back to .env
             file_put_contents($envPath, $envContent);
         }
     }
