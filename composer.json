@@ -1,0 +1,28 @@
+{
+    "name": "bijanbiria/laravel-deploy-wizard",
+    "description": "A Laravel Installer Wizard similar to WordPress installation process",
+    "type": "library",
+    "require": {
+        "laravel/framework": "^10.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Bijanbiria\\LaravelDeployWizard\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "bijan biria",
+            "email": "bijan.biria@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bijanbiria\\LaravelDeployWizard\\Providers\\InstallServiceProvider"
+            ]
+        }
+    }
+}
