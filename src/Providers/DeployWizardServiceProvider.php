@@ -48,10 +48,21 @@ class DeployWizardServiceProvider extends ServiceProvider
         }
 
         // ✅ If the .env exists but the APP_KEY is missing, generate a new one
-        if (File::exists(base_path('.env')) && empty(env('APP_KEY'))) {
+        if ((File::exists(base_path('.env')) && empty(env('APP_KEY')))) {
             // Generate application key
             Artisan::call('key:generate');
 
+            // 🔄 Redirect to the deployment wizard for further setup
+            if (Request::path() == 'deploy-wizard') {
+                header('Location: ' . Request::fullUrl());
+            } else {
+                header('Location: /deploy-wizard');
+            }
+            exit;
+        }
+
+        // ✅ If the .env exists but the APP_KEY is missing, generate a new one
+        if (!$this->checkDatabaseTable()) {
             // Run database migrations
             Artisan::call('migrate --force');
 
@@ -59,8 +70,27 @@ class DeployWizardServiceProvider extends ServiceProvider
             Artisan::call('db:seed --force');
 
             // 🔄 Redirect to the deployment wizard for further setup
-            header('Location: /deploy-wizard');
+            if (Request::path() == 'deploy-wizard') {
+                header('Location: ' . Request::fullUrl());
+            } else {
+//                header('Location: /deploy-wizard');
+            }
             exit;
+        }
+    }
+
+    /**
+     * Check if the specified database table exists.
+     *
+     * @return bool
+     */
+    protected function checkDatabaseTable(): bool
+    {
+        try {
+            $tableName = config('deploywizard.check_table', 'users');
+            return \Schema::hasTable($tableName);
+        } catch (\Exception $e) {
+            return false;
         }
     }
 

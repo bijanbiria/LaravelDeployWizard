@@ -15,6 +15,10 @@ return [
     // These commands will run in the order they are listed here.
     'final_commands' => [
         'php artisan route:cache',
-        'php artisan migrate',
+        'php artisan migrate:fresh',
+        'php artisan db:seed'
     ],
+
+    // ✅ Table name to check before starting the installation wizard
+    'check_table' => 'users', // Default: users
 ];

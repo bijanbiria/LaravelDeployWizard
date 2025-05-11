@@ -17,6 +17,7 @@
                 <button @click="step = 1" :class="step === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'" class="px-4 py-2 rounded">Step 1</button>
                 <button @click="step = 2" :class="step === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200'" class="px-4 py-2 rounded">Step 2</button>
                 <button @click="step = 3" :class="step === 3 ? 'bg-blue-500 text-white' : 'bg-gray-200'" class="px-4 py-2 rounded">Step 3</button>
+                <button @click="step = 4" :class="step === 4 ? 'bg-blue-500 text-white' : 'bg-gray-200'" class="px-4 py-2 rounded">Step 4</button>
             </div>
 
             <!-- Step 1 -->
@@ -48,14 +49,20 @@
 
                 <template x-if="db_connection !== 'sqlite'">
                     <div class="space-y-4">
-                        <input type="text" name="db_host" placeholder="Database Host" class="border p-2 w-full">
-                        <input type="text" name="db_port" placeholder="Database Port" class="border p-2 w-full">
-                        <input type="text" name="db_database" placeholder="Database Name" class="border p-2 w-full">
-                        <input type="text" name="db_username" placeholder="Database Username" class="border p-2 w-full">
-                        <input type="password" name="db_password" placeholder="Database Password" class="border p-2 w-full">
+                        <input type="text" name="db_host" value="{{ $dbHost }}" placeholder="Database Host" class="border p-2 w-full">
+                        <input type="text" name="db_port" value="{{ $dbPort }}" placeholder="Database Port" class="border p-2 w-full">
+                        <input type="text" name="db_database" value="{{ $dbName }}" placeholder="Database Name" class="border p-2 w-full">
+                        <input type="text" name="db_username" value="{{ $dbUser }}" placeholder="Database Username" class="border p-2 w-full">
+                        <input type="password" name="db_password" value="{{ $dbPassword }}" placeholder="Database Password" class="border p-2 w-full">
                     </div>
                 </template>
 
+                <button type="submit" class="bg-green-500 text-white p-2 w-full">Next Step</button>
+            </form>
+
+            <!-- Step 4 -->
+            <form x-show="step === 4" method="POST" action="{{ route('deploy-wizard.step4') }}" class="space-y-4">
+                @csrf
                 <button type="submit" class="bg-green-500 text-white p-2 w-full">Finish Setup</button>
             </form>
         </div>

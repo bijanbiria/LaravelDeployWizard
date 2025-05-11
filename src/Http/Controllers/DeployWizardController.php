@@ -110,10 +110,19 @@ class DeployWizardController extends Controller
             $this->setEnvValue('DB_PASSWORD', $request->db_password);
         }
 
+        // Redirect to the complete route defined in the configuration
+        return redirect()->route('deploy-wizard.show', ['step' => '4']);
+    }
+
+    public function storeStep4(Request $request): RedirectResponse
+    {
         // ✅ Execute final Artisan commands defined in the configuration
         $commands = config('deploywizard.final_commands');
 
         foreach ($commands as $command) {
+            // Remove 'php artisan ' if it exists at the beginning of the command
+            $command = str_starts_with($command, 'php artisan ') ? substr($command, 12) : $command;
+
             try {
                 Artisan::call($command);
                 // ✅ Command executed: {$command}
