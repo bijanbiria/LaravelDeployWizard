@@ -9,5 +9,6 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('/store-step-1', [DeployWizardController::class, 'storeStep1'])->name('deploy-wizard.step1');
         Route::post('/store-step-2', [DeployWizardController::class, 'storeStep2'])->name('deploy-wizard.step2');
         Route::post('/store-step-3', [DeployWizardController::class, 'storeStep3'])->name('deploy-wizard.step3');
+        Route::post('/store-step-4', [DeployWizardController::class, 'storeStep4'])->name('deploy-wizard.step4');
     });
 });
